@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 300px;
+            margin: 50px auto;
+        }
+        input {
+            width: 100%;
+            text-align: right;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 18px;
+        }
+        button {
+            width: 23%;
+            margin: 1%;
+            padding: 10px;
+            font-size: 18px;
+        }
+        div {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <input type="text" id="input" disabled />
+    
+    <div>
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button onclick="setOperation('/')">/</button>
+    </div>
+    <div>
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button onclick="setOperation('*')">*</button>
+    </div>
+    <div>
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button onclick="setOperation('-')">-</button>
+    </div>
+    <div>
+        <button onclick="appendValue('0')">0</button>
+        <button onclick="calculateResult()">=</button>
+        <button onclick="appendValue('.')">.</button>
+        <button onclick="setOperation('+')">+</button>
+    </div>
+
+    <h3>История действий:</h3>
+    <div id="history"></div>
+
+    <script>
+        let currentInput = '';
+        let previousInput = '';
+        let operation = '';
+
+        function appendValue(value) {
+            currentInput += value;
+            document.getElementById('input').value = currentInput;
+        }
+
+        function setOperation(op) {
+            if (currentInput === '') return;
+            if (previousInput !== '') {
+                calculateResult();
+            }
+            operation = op;
+            previousInput = currentInput;
+            currentInput = '';
+        }
+
+        function calculateResult() {
+            let result;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+            
+            if (isNaN(prev) || isNaN(current)) return;
+
+            switch (operation) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    result = prev / current;
+                    break;
+                default:
+                    return;
+            }
+
+            addToHistory(`${previousInput} ${operation} ${currentInput} = ${result}`);
+            currentInput = result.toString();
+            operation = '';
+            previousInput = '';
+            document.getElementById('input').value = currentInput;
+        }
+
+        function addToHistory(entry) {
+            const historyDiv = document.getElementById('history');
+            const historyEntry = document.createElement('div');
+            historyEntry.textContent = entry;
+            historyDiv.appendChild(historyEntry);
+        }
+    </script>
+
+</body>
+</html>
