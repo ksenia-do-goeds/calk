@@ -102,6 +102,10 @@
                     result = prev * current;
                     break;
                 case '/':
+                    if (current === 0) {
+                        alert("Ошибка: Деление на ноль!");
+                        return;
+                    }
                     result = prev / current;
                     break;
                 default:
